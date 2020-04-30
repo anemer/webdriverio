@@ -56,6 +56,19 @@ test('launch chrome with chrome arguments', async () => {
     })
 })
 
+test('launch chrome without default flags', async() => {
+    const browser = await launch({
+        browserName: 'chrome',
+        disableDefaultChromeFlags: true
+    })
+    expect(launchChromeBrowser.mock.calls).toMatchSnapshot()
+    expect(puppeteer.connect.mock.calls).toMatchSnapshot()
+
+    const pages = await browser.pages()
+    expect(pages[0].close).toBeCalledTimes(1)
+    expect(pages[1].close).toBeCalledTimes(0)
+})
+
 test('throws an error if an unknown deviceName is picked', async () => {
     const err = await launch({
         browserName: 'chrome',

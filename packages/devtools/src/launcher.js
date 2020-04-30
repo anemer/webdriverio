@@ -22,6 +22,7 @@ const DEVICE_NAMES = Object.values(DEVICES).map((device) => device.name)
 async function launchChrome (capabilities) {
     const chromeOptions = capabilities[VENDOR_PREFIX.chrome] || {}
     const mobileEmulation = chromeOptions.mobileEmulation || {}
+    const disableDefaultChromeFlags = capabilities.disableDefaultChromeFlags || false
 
     if (typeof mobileEmulation.deviceName === 'string') {
         const deviceProperties = Object.values(DEVICES).find(device => device.name === mobileEmulation.deviceName)
@@ -39,7 +40,7 @@ async function launchChrome (capabilities) {
 
     const deviceMetrics = mobileEmulation.deviceMetrics || {}
     const chromeFlags = [
-        ...DEFAULT_FLAGS,
+        ...(disableDefaultChromeFlags ? [] : DEFAULT_FLAGS),
         ...[
             `--window-position=${DEFAULT_X_POSITION},${DEFAULT_Y_POSITION}`,
             `--window-size=${DEFAULT_WIDTH},${DEFAULT_HEIGHT}`
